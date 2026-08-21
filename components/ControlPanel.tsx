@@ -43,13 +43,16 @@ export default function ControlPanel({
   };
 
   return (
-    <aside className="space-y-6 rounded-xl border border-slate-800 bg-slate-900/80 p-5">
-      <div>
-        <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-300">
-          Surface ocean parameters
+    <aside className="space-y-7 border-t-2 border-[#9eaaa6] bg-[#f7f8f5] px-5 py-6 lg:sticky lg:top-6 lg:self-start">
+      <div className="border-b border-[#cfd5d1] pb-5">
+        <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#6b7675]">
+          Scenario controls
+        </p>
+        <h2 className="mt-2 text-lg font-medium tracking-tight text-[#1b2728]">
+          Surface conditions
         </h2>
-        <p className="mt-1 text-xs text-slate-500">
-          Adjust conditions to estimate cold-water coral response.
+        <p className="mt-2 text-xs leading-5 text-[#667170]">
+          Adjust the inputs to recalculate the response estimate.
         </p>
       </div>
 
@@ -88,27 +91,43 @@ export default function ControlPanel({
       <div>
         <label
           htmlFor="chart-param"
-          className="mb-2 block text-xs font-medium text-slate-400"
+          className="mb-2 block text-xs font-medium text-[#4d5959]"
         >
           Scatter plot X-axis
         </label>
-        <select
-          id="chart-param"
-          value={chartParam}
-          onChange={(e) => onChartParamChange(e.target.value as ChartParam)}
-          className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-none focus:border-cyan-500"
-        >
-          {(Object.keys(CHART_PARAM_LABELS) as ChartParam[]).map((key) => (
-            <option key={key} value={key}>
-              {CHART_PARAM_LABELS[key]}
-            </option>
-          ))}
-        </select>
+        <div className="relative">
+          <select
+            id="chart-param"
+            value={chartParam}
+            onChange={(e) => onChartParamChange(e.target.value as ChartParam)}
+            className="w-full appearance-none border border-[#bfc7c2] bg-white py-2.5 pl-3 pr-12 text-sm text-[#202b2c] outline-none transition hover:border-[#9eaaa6] focus:border-[#286b73] focus:ring-1 focus:ring-[#286b73]"
+          >
+            {(Object.keys(CHART_PARAM_LABELS) as ChartParam[]).map((key) => (
+              <option key={key} value={key}>
+                {CHART_PARAM_LABELS[key]}
+              </option>
+            ))}
+          </select>
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 16 16"
+            className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#667473]"
+          >
+            <path
+              d="m4 6 4 4 4-4"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="1.5"
+            />
+          </svg>
+        </div>
       </div>
 
       <div>
-        <p className="mb-2 text-xs font-medium text-slate-400">
-          Station CSV upload
+        <p className="mb-2 text-xs font-medium text-[#4d5959]">
+          Station data
         </p>
         <div
           onDragEnter={(e) => {
@@ -128,24 +147,24 @@ export default function ControlPanel({
             setDragActive(false);
             void handleFile(e.dataTransfer.files?.[0]);
           }}
-          className={`rounded-lg border border-dashed px-4 py-6 text-center transition-colors ${
+          className={`border border-dashed px-4 py-5 text-center transition-colors ${
             dragActive
-              ? "border-cyan-400 bg-cyan-950/30"
-              : "border-slate-700 bg-slate-950/50"
+              ? "border-[#286b73] bg-[#e6efed]"
+              : "border-[#aeb8b3] bg-white"
           }`}
         >
-          <Upload className="mx-auto mb-2 h-5 w-5 text-cyan-400" />
-          <p className="text-xs text-slate-400">
-            Drop CSV or{" "}
+          <Upload className="mx-auto mb-2 h-4 w-4 text-[#286b73]" />
+          <p className="text-xs text-[#64706f]">
+            Drop a CSV file or{" "}
             <button
               type="button"
               onClick={() => inputRef.current?.click()}
-              className="font-medium text-cyan-400 underline-offset-2 hover:underline"
+              className="font-medium text-[#286b73] underline underline-offset-2 hover:text-[#194f55]"
             >
               browse
             </button>
           </p>
-          <p className="mt-1 text-[10px] text-slate-600">
+          <p className="mt-2 font-mono text-[9px] text-[#818a87]">
             Columns: lat, lon, temp, ph, microplastics
           </p>
           <input
@@ -157,16 +176,16 @@ export default function ControlPanel({
           />
         </div>
         {uploading && (
-          <p className="mt-2 text-xs text-cyan-400">Parsing CSV…</p>
+          <p className="mt-2 text-xs text-[#286b73]">Parsing CSV…</p>
         )}
         {uploadError && (
-          <p className="mt-2 text-xs text-rose-400">{uploadError}</p>
+          <p className="mt-2 text-xs text-[#a2453d]">{uploadError}</p>
         )}
         {dataSource === "csv" && (
           <button
             type="button"
             onClick={onResetData}
-            className="mt-3 inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200"
+            className="mt-3 inline-flex items-center gap-1.5 text-left text-xs text-[#586464] underline-offset-2 hover:text-[#286b73] hover:underline"
           >
             <RotateCcw className="h-3.5 w-3.5" />
             Reset to mock Greenland stations
@@ -197,8 +216,8 @@ function SliderField({
   return (
     <div>
       <div className="mb-2 flex items-center justify-between gap-2">
-        <label className="text-xs font-medium text-slate-400">{label}</label>
-        <span className="rounded border border-slate-700 bg-slate-950 px-2 py-0.5 font-mono text-xs text-cyan-300">
+        <label className="text-xs font-medium leading-4 text-[#4d5959]">{label}</label>
+        <span className="border-b border-[#9eaaa6] px-1 font-mono text-xs font-medium text-[#214f54]">
           {format(value)}
         </span>
       </div>
@@ -209,9 +228,9 @@ function SliderField({
         step={step}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="h-2 w-full cursor-pointer appearance-none rounded-full bg-slate-700 accent-cyan-400"
+        className="w-full cursor-pointer appearance-none accent-[#286b73]"
       />
-      <div className="mt-1 flex justify-between text-[10px] text-slate-600">
+      <div className="mt-0 flex justify-between font-mono text-[9px] text-[#858e8b]">
         <span>{format(min)}</span>
         <span>{format(max)}</span>
       </div>

@@ -1,7 +1,5 @@
 "use client";
 
-import { Activity, Database, Waves } from "lucide-react";
-
 type HeaderProps = {
   pointCount: number;
   dataSource: "mock" | "csv";
@@ -18,71 +16,75 @@ export default function Header({
 
   const statusColor =
     healthScore >= 70
-      ? "text-emerald-400"
+      ? "text-[#286b73]"
       : healthScore >= 40
-        ? "text-amber-400"
-        : "text-rose-400";
+        ? "text-[#9a642f]"
+        : "text-[#a2453d]";
 
   return (
-    <header className="border-b border-slate-800 bg-slate-950/90">
-      <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-5 sm:px-6 lg:flex-row lg:items-end lg:justify-between lg:px-8">
-        <div>
-          <p className="mb-1 text-xs font-medium uppercase tracking-[0.2em] text-cyan-400/80">
-            GACHE · MVP
+    <header className="border-b border-[#bfc7c2] bg-[#f7f8f5]">
+      <div className="mx-auto max-w-[1440px] px-5 py-7 sm:px-8 lg:px-10 lg:py-9">
+        <div className="mb-3 flex items-center justify-between gap-4">
+          <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-[#607071]">
+            GACHE / Greenland monitoring study
           </p>
-          <h1 className="text-2xl font-semibold tracking-tight text-slate-100 sm:text-3xl">
-            Greenland Arctic Coral Health Estimator
-          </h1>
-          <p className="mt-2 max-w-2xl text-sm text-slate-400">
-            Client-side proxy model for cold-water coral health from surface
-            temperature, ocean pH, and microplastic density across offshore
-            Greenland stations.
+          <a
+            href="https://www.linkedin.com/in/jessicawallace2/"
+            target="_blank"
+            rel="noreferrer"
+            className="group inline-flex shrink-0 items-center gap-1.5 text-xs font-medium text-[#4d5959] underline decoration-[#aeb8b3] underline-offset-4 transition-colors hover:text-[#286b73] hover:decoration-[#286b73] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#286b73] focus-visible:ring-offset-4"
+            aria-label="About Jessie Wallace on LinkedIn (opens in a new tab)"
+          >
+            About me
+            <span aria-hidden="true" className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5">
+              ↗
+            </span>
+          </a>
+        </div>
+
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <h1 className="max-w-3xl text-3xl font-medium leading-[1.08] tracking-[-0.035em] text-[#182122] sm:text-4xl">
+              Greenland Arctic Coral Health Estimator
+            </h1>
+            <p className="mt-4 max-w-2xl text-sm leading-6 text-[#596465]">
+              Scenario analysis for cold-water coral response using surface
+              temperature, ocean pH, and microplastic density across offshore
+              Greenland stations.
+            </p>
+          </div>
+
+          <p className="max-w-xs border-l-2 border-[#286b73] pl-4 text-xs leading-5 text-[#667071]">
+            Screening-level proxy. Outputs support comparative analysis and
+            should not be interpreted as field observations.
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-3 text-sm">
-          <StatusChip
-            icon={<Activity className="h-3.5 w-3.5" />}
-            label="Model"
-            value={modelStatus}
-            valueClassName={statusColor}
-          />
-          <StatusChip
-            icon={<Database className="h-3.5 w-3.5" />}
-            label="Stations"
-            value={`${pointCount} · ${dataSource === "csv" ? "CSV" : "Mock"}`}
-          />
-          <StatusChip
-            icon={<Waves className="h-3.5 w-3.5" />}
-            label="Domain"
-            value="59–78°N · 60–10°W"
-          />
+        <div className="mt-8 grid border-y border-[#cbd1cd] sm:grid-cols-3">
+          <MetadataItem label="Scenario classification" value={modelStatus} valueClassName={statusColor} />
+          <MetadataItem label="Station dataset" value={`${pointCount} stations / ${dataSource === "csv" ? "Uploaded CSV" : "Reference sample"}`} />
+          <MetadataItem label="Spatial domain" value="59–78°N / 60–10°W" />
         </div>
       </div>
     </header>
   );
 }
 
-function StatusChip({
-  icon,
+function MetadataItem({
   label,
   value,
-  valueClassName = "text-slate-100",
+  valueClassName = "text-[#263031]",
 }: {
-  icon: React.ReactNode;
   label: string;
   value: string;
   valueClassName?: string;
 }) {
   return (
-    <div className="flex items-center gap-2 rounded-lg border border-slate-800 bg-slate-900/80 px-3 py-2">
-      <span className="text-cyan-400">{icon}</span>
-      <div>
-        <p className="text-[10px] uppercase tracking-wider text-slate-500">
-          {label}
-        </p>
-        <p className={`font-medium ${valueClassName}`}>{value}</p>
-      </div>
+    <div className="py-3 sm:border-r sm:border-[#cbd1cd] sm:px-5 sm:first:pl-0 sm:last:border-r-0">
+      <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-[#727c7b]">
+        {label}
+      </p>
+      <p className={`mt-1 text-sm font-medium ${valueClassName}`}>{value}</p>
     </div>
   );
 }

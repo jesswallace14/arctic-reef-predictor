@@ -49,59 +49,61 @@ export default function ChartsSection({
   ];
 
   return (
-    <section className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-      <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-4">
-        <h3 className="mb-1 text-sm font-semibold text-slate-200">
-          Parameter vs Coral Health
-        </h3>
-        <p className="mb-4 text-xs text-slate-500">
+    <section className="grid grid-cols-1 gap-8 xl:grid-cols-2">
+      <figure className="border-t-2 border-[#9eaaa6] bg-[#f7f8f5]">
+        <figcaption className="border-b border-[#cfd5d1] px-5 py-4">
+          <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#6b7675]">Figure 01 / Regression</p>
+          <h3 className="mt-1 text-base font-medium text-[#202b2c]">Parameter response</h3>
+          <p className="mt-1 text-xs leading-5 text-[#6b7574]">
           Scatter of station {CHART_PARAM_LABELS[chartParam]} vs health score
           with OLS regression line.
-        </p>
-        <div className="h-72 w-full">
+          </p>
+        </figcaption>
+        <div className="h-80 w-full px-3 py-5 sm:px-5">
           <ResponsiveContainer width="100%" height="100%">
             <ComposedChart margin={{ top: 8, right: 12, bottom: 8, left: 0 }}>
-              <CartesianGrid stroke="#1e293b" strokeDasharray="3 3" />
+              <CartesianGrid stroke="#d9ddda" strokeDasharray="2 4" />
               <XAxis
                 type="number"
                 dataKey="x"
                 name={CHART_PARAM_LABELS[chartParam]}
-                stroke="#64748b"
-                tick={{ fill: "#94a3b8", fontSize: 11 }}
+                stroke="#9aa5a1"
+                tick={{ fill: "#66716f", fontSize: 10 }}
                 domain={["auto", "auto"]}
                 label={{
                   value: CHART_PARAM_LABELS[chartParam],
                   position: "insideBottom",
                   offset: -2,
-                  fill: "#64748b",
-                  fontSize: 11,
+                  fill: "#66716f",
+                  fontSize: 10,
                 }}
               />
               <YAxis
                 type="number"
                 dataKey="y"
                 name="Health %"
-                stroke="#64748b"
-                tick={{ fill: "#94a3b8", fontSize: 11 }}
+                stroke="#9aa5a1"
+                tick={{ fill: "#66716f", fontSize: 10 }}
                 domain={[0, 100]}
                 label={{
                   value: "Coral Health Score %",
                   angle: -90,
                   position: "insideLeft",
-                  fill: "#64748b",
-                  fontSize: 11,
+                  fill: "#66716f",
+                  fontSize: 10,
                 }}
               />
               <ZAxis range={[60, 60]} />
               <Tooltip
                 cursor={{ strokeDasharray: "3 3" }}
                 contentStyle={{
-                  backgroundColor: "#0f172a",
-                  border: "1px solid #1e293b",
-                  borderRadius: 8,
+                  backgroundColor: "#ffffff",
+                  border: "1px solid #bfc7c2",
+                  borderRadius: 0,
+                  color: "#243031",
                   fontSize: 12,
                 }}
-                labelStyle={{ color: "#94a3b8" }}
+                labelStyle={{ color: "#65706e" }}
                 formatter={(value, name) => {
                   const num =
                     typeof value === "number"
@@ -116,15 +118,15 @@ export default function ChartsSection({
               <Scatter
                 name="Stations"
                 data={scatterPlotData}
-                fill="#22d3ee"
-                fillOpacity={0.85}
+                fill="#286b73"
+                fillOpacity={0.78}
               />
               {regression.length === 2 && (
                 <Line
                   data={regression}
                   dataKey="y"
-                  stroke="#f59e0b"
-                  strokeWidth={2}
+                  stroke="#a86539"
+                  strokeWidth={1.5}
                   dot={false}
                   legendType="line"
                   name="OLS fit"
@@ -134,59 +136,61 @@ export default function ChartsSection({
             </ComposedChart>
           </ResponsiveContainer>
         </div>
-      </div>
+      </figure>
 
-      <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-4">
-        <h3 className="mb-1 text-sm font-semibold text-slate-200">
-          Baseline vs Current State
-        </h3>
-        <p className="mb-4 text-xs text-slate-500">
+      <figure className="border-t-2 border-[#9eaaa6] bg-[#f7f8f5]">
+        <figcaption className="border-b border-[#cfd5d1] px-5 py-4">
+          <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#6b7675]">Figure 02 / Comparison</p>
+          <h3 className="mt-1 text-base font-medium text-[#202b2c]">Reference comparison</h3>
+          <p className="mt-1 text-xs leading-5 text-[#6b7574]">
           Ideal Arctic CWC baseline (3°C, pH 8.1, 0 plastics) compared to
           current slider values.
-        </p>
-        <div className="h-72 w-full">
+          </p>
+        </figcaption>
+        <div className="h-80 w-full px-3 py-5 sm:px-5">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={comparison}
               margin={{ top: 8, right: 12, bottom: 8, left: 0 }}
             >
-              <CartesianGrid stroke="#1e293b" strokeDasharray="3 3" />
+              <CartesianGrid stroke="#d9ddda" strokeDasharray="2 4" />
               <XAxis
                 dataKey="metric"
-                stroke="#64748b"
-                tick={{ fill: "#94a3b8", fontSize: 11 }}
+                stroke="#9aa5a1"
+                tick={{ fill: "#66716f", fontSize: 10 }}
               />
               <YAxis
-                stroke="#64748b"
-                tick={{ fill: "#94a3b8", fontSize: 11 }}
+                stroke="#9aa5a1"
+                tick={{ fill: "#66716f", fontSize: 10 }}
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: "#0f172a",
-                  border: "1px solid #1e293b",
-                  borderRadius: 8,
+                  backgroundColor: "#ffffff",
+                  border: "1px solid #bfc7c2",
+                  borderRadius: 0,
+                  color: "#243031",
                   fontSize: 12,
                 }}
               />
               <Legend
-                wrapperStyle={{ fontSize: 12, color: "#94a3b8" }}
+                wrapperStyle={{ fontSize: 11, color: "#66716f" }}
               />
               <Bar
                 dataKey="baseline"
                 name="Baseline"
-                fill="#64748b"
-                radius={[4, 4, 0, 0]}
+                fill="#8f9996"
+                radius={[1, 1, 0, 0]}
               />
               <Bar
                 dataKey="current"
                 name="Current"
-                fill="#22d3ee"
-                radius={[4, 4, 0, 0]}
+                fill="#286b73"
+                radius={[1, 1, 0, 0]}
               />
             </BarChart>
           </ResponsiveContainer>
         </div>
-      </div>
+      </figure>
     </section>
   );
 }

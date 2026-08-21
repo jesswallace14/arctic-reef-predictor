@@ -14,9 +14,12 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "GACHE · Greenland Arctic Coral Health Estimator",
+  title: "Greenland Arctic Coral Health Estimator",
   description:
-    "MVP dashboard estimating Arctic cold-water coral health from surface ocean temperature, pH, and microplastic density.",
+    "Research interface estimating Arctic cold-water coral health from surface ocean temperature, pH, and microplastic density.",
+  icons: {
+    icon: "/trojan-horse-mark.png",
+  },
 };
 
 export default function RootLayout({
@@ -25,9 +28,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-slate-950 font-sans antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-[#f2f3ef] font-sans antialiased`}
       >
         {children}
       </body>

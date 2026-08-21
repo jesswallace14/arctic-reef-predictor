@@ -1,6 +1,5 @@
 "use client";
 
-import { HeartPulse, Atom, Ruler, AlertTriangle } from "lucide-react";
 import type { CoralMetrics, StressLevel } from "@/lib/coralModel";
 
 type MetricsGridProps = {
@@ -9,19 +8,19 @@ type MetricsGridProps = {
 
 const STRESS_STYLES: Record<
   StressLevel,
-  { badge: string; ring: string }
+  { text: string; dot: string }
 > = {
   Low: {
-    badge: "bg-emerald-500/15 text-emerald-400 border-emerald-500/40",
-    ring: "border-emerald-500/30",
+    text: "text-[#286b73]",
+    dot: "bg-[#286b73]",
   },
   Moderate: {
-    badge: "bg-amber-500/15 text-amber-400 border-amber-500/40",
-    ring: "border-amber-500/30",
+    text: "text-[#9a642f]",
+    dot: "bg-[#b27a42]",
   },
   Critical: {
-    badge: "bg-rose-500/15 text-rose-400 border-rose-500/40",
-    ring: "border-rose-500/30",
+    text: "text-[#a2453d]",
+    dot: "bg-[#a2453d]",
   },
 };
 
@@ -29,66 +28,55 @@ export default function MetricsGrid({ metrics }: MetricsGridProps) {
   const stress = STRESS_STYLES[metrics.stressLevel];
 
   return (
-    <section className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-      <MetricCard
-        icon={<HeartPulse className="h-4 w-4 text-cyan-400" />}
-        label="Coral Health Index Score"
-        value={`${metrics.healthScore.toFixed(1)}%`}
-        hint="0–100% · multivariate proxy"
-      />
-      <MetricCard
-        icon={<Atom className="h-4 w-4 text-cyan-400" />}
-        label="Aragonite Saturation State"
-        value={metrics.omegaArag.toFixed(2)}
-        hint="Ω_arag estimation from pH"
-      />
-      <MetricCard
-        icon={<Ruler className="h-4 w-4 text-cyan-400" />}
-        label="Calcification Extension Rate"
-        value={`${metrics.extensionRate.toFixed(2)} mm/yr`}
-        hint="max(0, 2.2 × (Ω_arag − 0.8))"
-      />
-      <div
-        className={`rounded-xl border bg-slate-900/80 p-4 ${stress.ring}`}
-      >
-        <div className="mb-3 flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-slate-500">
-          <AlertTriangle className="h-4 w-4 text-cyan-400" />
-          Environmental Stress Level
+    <section className="border-t-2 border-[#9eaaa6] bg-[#f7f8f5]">
+      <div className="flex items-baseline justify-between border-b border-[#cfd5d1] px-5 py-4">
+        <div>
+          <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#6b7675]">
+            Model response
+          </p>
+          <h2 className="mt-1 text-lg font-medium tracking-tight">Current scenario</h2>
         </div>
-        <span
-          className={`inline-flex rounded-full border px-3 py-1 text-sm font-semibold ${stress.badge}`}
-        >
-          {metrics.stressLevel}
-        </span>
-        <p className="mt-3 text-xs text-slate-500">
-          Low ≥70 · Moderate 40–69 · Critical &lt;40
-        </p>
+        <p className="hidden text-xs text-[#74807e] sm:block">Updated from control inputs</p>
+      </div>
+
+      <div className="grid sm:grid-cols-2 xl:grid-cols-4">
+        <MetricCell label="Coral health index" value={`${metrics.healthScore.toFixed(1)}%`} hint="Scale: 0–100" primary />
+        <MetricCell label="Aragonite saturation" value={metrics.omegaArag.toFixed(2)} hint="Estimated Ωarag" />
+        <MetricCell label="Extension rate" value={metrics.extensionRate.toFixed(2)} unit="mm yr⁻¹" hint="Calcification proxy" />
+        <div className="border-t border-[#cfd5d1] px-5 py-5 sm:border-l xl:border-t-0">
+          <p className="font-mono text-[10px] uppercase tracking-[0.1em] text-[#6f7977]">Stress classification</p>
+          <div className={`mt-4 flex items-center gap-2 text-2xl font-medium tracking-tight ${stress.text}`}>
+            <span className={`h-2 w-2 rounded-full ${stress.dot}`} />
+            {metrics.stressLevel}
+          </div>
+          <p className="mt-3 text-[11px] leading-4 text-[#737d7b]">Low ≥70 / Moderate 40–69 / Critical &lt;40</p>
+        </div>
       </div>
     </section>
   );
 }
 
-function MetricCard({
-  icon,
+function MetricCell({
   label,
   value,
+  unit,
   hint,
+  primary = false,
 }: {
-  icon: React.ReactNode;
   label: string;
   value: string;
+  unit?: string;
   hint: string;
+  primary?: boolean;
 }) {
   return (
-    <div className="rounded-xl border border-slate-800 bg-slate-900/80 p-4">
-      <div className="mb-3 flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-slate-500">
-        {icon}
-        {label}
-      </div>
-      <p className="text-2xl font-semibold tracking-tight text-slate-100">
+    <div className="border-t border-[#cfd5d1] px-5 py-5 sm:odd:border-r xl:border-r xl:border-t-0 xl:last:border-r-0">
+      <p className="font-mono text-[10px] uppercase tracking-[0.1em] text-[#6f7977]">{label}</p>
+      <p className={`mt-3 font-medium tracking-[-0.035em] text-[#1d292a] ${primary ? "text-4xl" : "text-3xl"}`}>
         {value}
+        {unit && <span className="ml-2 text-xs font-normal tracking-normal text-[#6d7775]">{unit}</span>}
       </p>
-      <p className="mt-2 text-xs text-slate-500">{hint}</p>
+      <p className="mt-3 text-[11px] text-[#737d7b]">{hint}</p>
     </div>
   );
 }

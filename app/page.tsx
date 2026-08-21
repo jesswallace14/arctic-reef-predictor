@@ -36,14 +36,14 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100">
+    <div className="min-h-screen bg-[#f2f3ef] text-[#182122]">
       <Header
         pointCount={stations.length}
         dataSource={dataSource}
         healthScore={metrics.healthScore}
       />
 
-      <main className="mx-auto grid max-w-7xl gap-6 px-4 py-6 sm:px-6 lg:grid-cols-[320px_1fr] lg:px-8">
+      <main className="mx-auto grid max-w-[1440px] gap-8 px-5 py-8 sm:px-8 lg:grid-cols-[300px_minmax(0,1fr)] lg:px-10 lg:py-10">
         <ControlPanel
           params={params}
           chartParam={chartParam}
@@ -54,7 +54,7 @@ export default function Home() {
           dataSource={dataSource}
         />
 
-        <div className="space-y-6">
+        <div className="min-w-0 space-y-8">
           <MetricsGrid metrics={metrics} />
           <ChartsSection
             data={stations}
