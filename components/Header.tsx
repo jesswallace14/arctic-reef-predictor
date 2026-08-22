@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 type HeaderProps = {
   pointCount: number;
   dataSource: "mock" | "csv";
@@ -28,18 +29,26 @@ export default function Header({
           <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-[#607071]">
             GACHE / Greenland monitoring study
           </p>
-          <a
-            href="https://www.linkedin.com/in/jessicawallace2/"
-            target="_blank"
-            rel="noreferrer"
-            className="group inline-flex shrink-0 items-center gap-1.5 text-xs font-medium text-[#4d5959] underline decoration-[#aeb8b3] underline-offset-4 transition-colors hover:text-[#286b73] hover:decoration-[#286b73] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#286b73] focus-visible:ring-offset-4"
-            aria-label="About Jessie Wallace on LinkedIn (opens in a new tab)"
-          >
-            About me
-            <span aria-hidden="true" className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5">
-              ↗
-            </span>
-          </a>
+          <nav className="flex shrink-0 items-center gap-4 text-xs font-medium">
+            <Link
+              href="/about-this-project"
+              className="text-[#4d5959] underline decoration-[#aeb8b3] underline-offset-4 transition-colors hover:text-[#286b73] hover:decoration-[#286b73] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#286b73] focus-visible:ring-offset-4"
+            >
+              About this project
+            </Link>
+            <a
+              href="https://www.linkedin.com/in/jessicawallace2/"
+              target="_blank"
+              rel="noreferrer"
+              className="group inline-flex items-center gap-1.5 text-[#4d5959] underline decoration-[#aeb8b3] underline-offset-4 transition-colors hover:text-[#286b73] hover:decoration-[#286b73] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#286b73] focus-visible:ring-offset-4"
+              aria-label="About Jessie Wallace on LinkedIn (opens in a new tab)"
+            >
+              About me
+              <span aria-hidden="true" className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5">
+                ↗
+              </span>
+            </a>
+          </nav>
         </div>
 
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
