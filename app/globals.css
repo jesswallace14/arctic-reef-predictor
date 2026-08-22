@@ -16,6 +16,16 @@ body {
   font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
+/* Keep every interface element, including legacy mono utility labels and chart text, in one sans-serif family. */
+.font-mono,
+button,
+input,
+select,
+textarea,
+svg text {
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif !important;
+}
+
 ::selection {
   background: #b9d6d6;
   color: #152526;

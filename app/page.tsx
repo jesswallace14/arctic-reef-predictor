@@ -37,11 +37,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#f2f3ef] text-[#182122]">
-      <Header
-        pointCount={stations.length}
-        dataSource={dataSource}
-        healthScore={metrics.healthScore}
-      />
+      <Header />
 
       <main className="mx-auto grid max-w-[1440px] gap-8 px-5 py-8 sm:px-8 lg:grid-cols-[300px_minmax(0,1fr)] lg:px-10 lg:py-10">
         <ControlPanel
