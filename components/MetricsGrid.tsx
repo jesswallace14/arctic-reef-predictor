@@ -40,7 +40,7 @@ export default function MetricsGrid({ metrics }: MetricsGridProps) {
       </div>
 
       <div className="grid sm:grid-cols-2 xl:grid-cols-4">
-        <MetricCell label="Coral health index" value={`${metrics.healthScore.toFixed(1)}%`} hint="Scale: 0–100" primary />
+        <MetricCell label="Coral health index" value={`${metrics.healthScore.toFixed(1)}%`} hint="Nonlinear multi-stressor proxy" primary />
         <MetricCell label="Aragonite saturation" value={metrics.omegaArag.toFixed(2)} hint="Estimated Ωarag" />
         <MetricCell label="Extension rate" value={metrics.extensionRate.toFixed(2)} unit="mm yr⁻¹" hint="Calcification proxy" />
         <div className="border-t border-[#cfd5d1] px-5 py-5 sm:border-l xl:border-t-0">

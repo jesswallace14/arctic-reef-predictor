@@ -40,6 +40,16 @@ export default function AboutThisProjectPage() {
               className="rounded-2xl object-cover"
             />
           </div>
+          <p className="mt-2 text-xs text-[#6e7876]">
+            <a
+              href="https://oceannovaexpeditions.com/"
+              target="_blank"
+              rel="noreferrer"
+              className="text-[#286b73] underline decoration-[#77a4a4] underline-offset-4 transition-colors hover:text-[#1a4f55]"
+            >
+              The Ocean Nova hosts legendary expeditions to the ends of the earth ↗
+            </a>
+          </p>
         </section>
 
         <section className="mt-10 border-t border-[#cbd1cd] pt-6">
@@ -115,19 +125,65 @@ export default function AboutThisProjectPage() {
             </h2>
             <div className="mt-5 space-y-5 text-sm leading-7 text-[#4f5c5c]">
               <div>
-                <p className="font-medium text-[#263031]">Young Explorers Program</p>
                 <p className="mt-1">
-                  Placeholder for a short description of the program, its purpose,
-                  and the questions it encourages students and early-career
-                  explorers to investigate.
+                  The{" "}
+                  <a
+                    href="https://www.explorers.org/grants/adventure-canada-young-explorers/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-medium text-[#286b73] underline decoration-[#77a4a4] underline-offset-4 transition-colors hover:text-[#1a4f55]"
+                  >
+                    Young Explorers Program ↗
+                  </a>{" "}
+                  supports young people with place-based projects in science, art,
+                  and conservation. Selected explorers join an Adventure Canada
+                  expedition to carry out field research or creative and cultural
+                  work while building relationships within an international
+                  exploration community.
+                </p>
+                <p className="mt-3">
+                  Learn more about{" "}
+                  <a
+                    href="https://www.adventurecanada.com/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-medium text-[#286b73] underline decoration-[#77a4a4] underline-offset-4 transition-colors hover:text-[#1a4f55]"
+                  >
+                    Adventure Canada ↗
+                  </a>{" "}
+                  and{" "}
+                  <a
+                    href="https://www.explorers.org/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-medium text-[#286b73] underline decoration-[#77a4a4] underline-offset-4 transition-colors hover:text-[#1a4f55]"
+                  >
+                    The Explorers Club ↗
+                  </a>
+                  . Credit to Adventure Canada and The Explorers Club for making
+                  this work possible.
                 </p>
               </div>
               <div>
                 <p className="font-medium text-[#263031]">My proposal</p>
                 <p className="mt-1">
-                  Placeholder for the proposal summary: the coral-health question,
-                  why Greenland is the focus, and what this estimator is intended
-                  to make easier to understand.
+                  This project measures micro-plastics, acidification, &amp; temperature
+                  levels in surface and mid-water samples along the Western Greenland
+                  expedition route above the deep sea reefs, then compares those
+                  observations with the ocean conditions that shape deep-sea{" "}
+                  <em>Desmophyllum pertusum</em> coral habitat. The goal is to better
+                  understand whether sinking plastic pollution may increase pressure
+                  on Greenland&apos;s cold-water reefs.
+                </p>
+                <p className="mt-3">
+                  <a
+                    href="https://www.adventurecanada.com/staff/jesse-wallace-young-explorer"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-medium text-[#286b73] underline decoration-[#77a4a4] underline-offset-4 transition-colors hover:text-[#1a4f55]"
+                  >
+                    Read Jesse Wallace&apos;s Young Explorer profile ↗
+                  </a>
                 </p>
               </div>
             </div>
@@ -141,13 +197,24 @@ export default function AboutThisProjectPage() {
               <GalleryImage
                 src="/about/carousel-1.jpg"
                 alt="Ice formations and a snowy ridge under a clear blue sky"
+                caption="Icebergs"
               />
               <GalleryImage
                 src="/about/carousel-2.jpg"
                 alt="A small boat approaching the rocky Greenland coast"
+                caption="A Zodiac Landing"
               />
-              <ImagePlaceholder label="Gallery image 3" detail="Future image" className="aspect-[3/4]" />
-              <ImagePlaceholder label="Gallery image 4" detail="Future image" className="aspect-[3/4]" />
+              <GalleryImage
+                src="/about/collecting-water-samples.png"
+                alt="Jesse Wallace collecting a water sample beside a Greenlandic fjord"
+                caption="Collecting Water Samples"
+              />
+              <GalleryImage
+                src="/about/young-explorers-2026.png"
+                alt="Young Explorers on board with Greenlandic mountains and icebergs behind them"
+                caption="The Young Explorers"
+                aspectClass="aspect-[4/3]"
+              />
             </div>
           </div>
         </section>
@@ -183,17 +250,15 @@ export default function AboutThisProjectPage() {
               <p>
                 Attending Explorers Club lectures has continually inspired me to
                 merge these two worlds: cutting-edge hardware engineering and marine
-                conservation. The Iceland to Greenland expedition presents the
-                ultimate frontier for this synthesis. The dynamic, weather-dependent
-                itinerary along the Denmark Strait and Greenlandic fjords requires
+                conservation. The Iceland to Greenland expedition presented the
+                ultimate frontier for this synthesis - The dynamic, weather-dependent
+                itinerary along the Denmark Strait and Greenlandic fjords required
                 exactly the kind of agile, hyper-reliable hardware I specialize in
-                building. I want to deploy automated, low-cost microplastic sampling
-                arrays in these harsh Arctic conditions to protect the deep-sea{" "}
-                <em>Desmophyllum pertusum</em> reefs. I am applying because I want to
-                prove that rigorous, high-fidelity marine data collection in
-                inaccessible environments doesn&apos;t require a massive research
-                vessel—it just requires mechanical ingenuity and a commitment to
-                preserving our oceans&apos; hidden ecosystems.
+                building. I applied to this program because I want to prove that
+                rigorous, high-fidelity marine data collection in inaccessible
+                environments doesn&apos;t require a massive research vessel—it just
+                requires mechanical ingenuity and a commitment to preserving our
+                oceans&apos; hidden ecosystems.
               </p>
             </div>
           </div>
@@ -250,33 +315,29 @@ export default function AboutThisProjectPage() {
   );
 }
 
-function GalleryImage({ src, alt }: { src: string; alt: string }) {
-  return (
-    <div className="relative aspect-[3/4] overflow-hidden rounded-2xl bg-[#e4e8e3]">
-      <Image src={src} alt={alt} fill sizes="(min-width: 640px) 15vw, 45vw" className="rounded-2xl object-cover" />
-    </div>
-  );
-}
-
-function ImagePlaceholder({
-  label,
-  detail,
-  className = "",
+function GalleryImage({
+  src,
+  alt,
+  caption,
+  aspectClass = "aspect-[3/4]",
 }: {
-  label: string;
-  detail?: string;
-  className?: string;
+  src: string;
+  alt: string;
+  caption: string;
+  aspectClass?: string;
 }) {
   return (
-    <div
-      role="img"
-      aria-label={detail ? `${label}: ${detail}` : label}
-      className={`flex min-h-32 flex-col items-center justify-center rounded-2xl border border-dashed border-[#9facaa] bg-[#e4e8e3] px-4 text-center ${className}`}
-    >
-      <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#526768]">
-        {label}
-      </span>
-      {detail && <span className="mt-2 text-xs text-[#697777]">{detail}</span>}
-    </div>
+    <figure>
+      <div className={`relative ${aspectClass} overflow-hidden rounded-2xl bg-[#e4e8e3]`}>
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          sizes="(min-width: 640px) 15vw, 45vw"
+          className="rounded-2xl object-cover"
+        />
+      </div>
+      <figcaption className="mt-2 text-xs text-[#6e7876]">{caption}</figcaption>
+    </figure>
   );
 }

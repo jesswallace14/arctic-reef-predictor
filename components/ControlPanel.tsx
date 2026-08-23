@@ -93,7 +93,7 @@ export default function ControlPanel({
           htmlFor="chart-param"
           className="mb-2 block text-xs font-medium text-[#4d5959]"
         >
-          Scatter plot X-axis
+          Station response X-axis
         </label>
         <div className="relative">
           <select

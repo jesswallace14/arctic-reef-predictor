@@ -47,19 +47,54 @@ export function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
 }
 
+export type HealthStress = {
+  deepTemp: number;
+  thermal: number;
+  acidification: number;
+  microplastics: number;
+  interaction: number;
+  cumulativeRisk: number;
+};
+
 /**
- * Multivariate linear-regression proxy for Arctic cold-water coral health.
- * Ideal CWC surface temperature ~3°C; acidification and microplastics reduce score.
+ * Calibrated, nonlinear multi-stressor scenario model for D. pertusum health.
+ *
+ * The model follows the structure of coral-health prediction work that uses
+ * thresholded environmental exposures and logistic responses, but its weights
+ * are not fitted to Greenland field-health observations. It is therefore an
+ * exploratory scenario index, not a validated ecological forecast.
  */
-export function calculateHealthScore(params: OceanParams): number {
-  const tempPenalty = 2.5 * Math.max(0, params.temp - 3.0);
-  const acidificationPenalty = 20.0 * (8.1 - params.ph);
-  const microplasticPenalty = 0.12 * params.microplastics;
-  return clamp(
-    100 - (tempPenalty + acidificationPenalty + microplasticPenalty),
+export function calculateHealthStress(params: OceanParams): HealthStress {
+  const deepTemp = estimateDeepSeaTempFromSurface(params.temp);
+  const thermal = clamp((deepTemp - 4.45) / 0.55, 0, 1);
+  const acidification = clamp((8.1 - params.ph) / 0.15, 0, 1.5);
+  const microplastics = clamp(
+    Math.log1p(Math.max(0, params.microplastics)) / Math.log1p(500),
     0,
-    100
+    1
   );
+  const interaction =
+    1.4 * acidification * microplastics +
+    0.85 * thermal * microplastics +
+    0.65 * thermal * acidification;
+  const cumulativeRisk =
+    thermal + 1.2 * acidification + 2.4 * microplastics + interaction;
+
+  return {
+    deepTemp,
+    thermal,
+    acidification,
+    microplastics,
+    interaction,
+    cumulativeRisk,
+  };
+}
+
+export function calculateHealthScore(params: OceanParams): number {
+  const { cumulativeRisk } = calculateHealthStress(params);
+  const logistic = (value: number) => 1 / (1 + Math.exp(-value));
+  const baselineResponse = logistic(2.9);
+  return clamp((100 * logistic(2.9 - cumulativeRisk)) / baselineResponse, 0, 100);
 }
 
 /** Aragonite saturation state Ω_arag estimation from pH. */
@@ -143,8 +178,8 @@ export function buildRegressionLine(
   const maxX = Math.max(...xs);
 
   return [
-    { x: minX, y: fit.slope * minX + fit.intercept },
-    { x: maxX, y: fit.slope * maxX + fit.intercept },
+    { x: minX, y: clamp(fit.slope * minX + fit.intercept, 0, 100) },
+    { x: maxX, y: clamp(fit.slope * maxX + fit.intercept, 0, 100) },
   ];
 }
 
@@ -167,6 +202,186 @@ export function buildComparisonBars(current: OceanParams) {
       metric: "Extension (mm/yr)",
       baseline: Number(baseline.extensionRate.toFixed(2)),
       current: Number(live.extensionRate.toFixed(2)),
+    },
+  ];
+}
+
+export type DriverTimelinePoint = {
+  year: number;
+  observedDriver: number | null;
+  projectedDriver: number | null;
+  observedHealth: number | null;
+  projectedHealth: number | null;
+  deepTemp?: number;
+};
+
+/**
+ * A depth-transfer proxy for the 886–932 m Greenland Lophelia reef reported
+ * at 4.1–5.0 °C. Surface anomalies are damped at depth; this is a scenario
+ * model, not a replacement for temperature observations from the reef.
+ */
+export function estimateDeepSeaTempFromSurface(surfaceTemp: number): number {
+  return clamp(4.45 + 0.12 * (surfaceTemp - 6), 4.1, 5.0);
+}
+
+const WEST_GREENLAND_OISST_JULY_SNAPSHOTS = [
+  { year: 2020, temp: 8.12 },
+  { year: 2021, temp: 7.82 },
+  { year: 2022, temp: 5.12 },
+  { year: 2023, temp: 8.27 },
+  { year: 2024, temp: 4.28 },
+  { year: 2025, temp: 4.63 },
+] as const;
+
+const PH_AT_1981 = 8.14;
+const GREENLAND_SEA_PH_DECLINE_PER_YEAR = 0.00219;
+
+function pHForYear(year: number): number {
+  return PH_AT_1981 - GREENLAND_SEA_PH_DECLINE_PER_YEAR * (year - 1981);
+}
+
+function microplasticsForYear(year: number): number {
+  if (year <= 2005) return 0.9;
+  if (year <= 2014) return 0.9 + ((16.2 - 0.9) * (year - 2005)) / 9;
+  if (year <= 2019) return 16.2 + ((142 - 16.2) * (year - 2014)) / 5;
+  return 142 * 1.06 ** (year - 2019);
+}
+
+function surfaceTempForYear(year: number): number {
+  const observed = WEST_GREENLAND_OISST_JULY_SNAPSHOTS.find(
+    (point) => point.year === year
+  );
+  if (observed) return observed.temp;
+  if (year > 2025) return 4.63 + 0.03 * (year - 2025);
+
+  // No site-matched OISST snapshot is used before 2020 in this MVP.
+  // A 6 °C neutral surface reference maps to the 4.45 °C deep-reef midpoint.
+  return 6;
+}
+
+function combinedTimelineHealth(year: number, surfaceTemp = surfaceTempForYear(year)) {
+  return calculateHealthScore({
+    temp: surfaceTemp,
+    ph: pHForYear(year),
+    microplastics: microplasticsForYear(year),
+  });
+}
+
+/**
+ * NOAA OISST 1/4° grid-cell snapshots at 61.125°N, 51.125°W on 30/31 July.
+ * Future values extend NOAA Arctic Report Card's ~0.03 °C/year ice-free Arctic
+ * August warming rate as an illustrative, linear scenario.
+ */
+export function buildTemperatureTimeline(): DriverTimelinePoint[] {
+  const observed = WEST_GREENLAND_OISST_JULY_SNAPSHOTS.map(({ year, temp }) => {
+    const deepTemp = estimateDeepSeaTempFromSurface(temp);
+    return {
+      year,
+      observedDriver: temp,
+      projectedDriver: null,
+      observedHealth: combinedTimelineHealth(year, temp),
+      projectedHealth: null,
+      deepTemp,
+    };
+  });
+
+  const lastObserved = WEST_GREENLAND_OISST_JULY_SNAPSHOTS.at(-1)!;
+  const projected = Array.from({ length: 10 }, (_, index) => {
+    const year = 2026 + index;
+    const temp = lastObserved.temp + 0.03 * (year - lastObserved.year);
+    const deepTemp = estimateDeepSeaTempFromSurface(temp);
+    return {
+      year,
+      observedDriver: null,
+      projectedDriver: Number(temp.toFixed(2)),
+      observedHealth: null,
+      projectedHealth: combinedTimelineHealth(year, temp),
+      deepTemp,
+    };
+  });
+
+  return [...observed, ...projected];
+}
+
+const GREENLAND_MICROPLASTIC_OBSERVATIONS = [
+  { year: 2005, particles: 0.9 },
+  { year: 2014, particles: 16.2 },
+  { year: 2019, particles: 142 },
+] as const;
+
+/**
+ * Historical values come from Greenland Sea and West Greenland studies. The
+ * reported size fractions and collection methods differ, so they are exposed
+ * as sparse observations rather than a statistically comparable trend.
+ */
+export function buildMicroplasticTimeline(): DriverTimelinePoint[] {
+  const observed = GREENLAND_MICROPLASTIC_OBSERVATIONS.map(({ year, particles }) => ({
+    year,
+    observedDriver: particles,
+    projectedDriver: null,
+    observedHealth: combinedTimelineHealth(year),
+    projectedHealth: null,
+  }));
+
+  const projected = Array.from({ length: 10 }, (_, index) => {
+    const year = 2026 + index;
+    const particles = 142 * 1.06 ** (year - 2019);
+    return {
+      year,
+      observedDriver: null,
+      projectedDriver: Number(particles.toFixed(1)),
+      observedHealth: null,
+    projectedHealth: combinedTimelineHealth(year),
+    };
+  });
+
+  return [...observed, ...projected];
+}
+
+/**
+ * Greenland Sea upper-200 m pH trend from 1981–2019: −0.00219 pH/year.
+ * Values are a trend reconstruction for visualisation; 2020 onward is an
+ * explicit continuation scenario, not a future observation or climate model.
+ */
+export function buildAcidificationTimeline(): DriverTimelinePoint[] {
+  const observedYears = [1981, 1990, 2000, 2010, 2019];
+  const projectedYears = [2020, 2025, 2030, 2035];
+
+  return [
+    ...observedYears.map((year) => {
+      const ph = pHForYear(year);
+      return {
+        year,
+        observedDriver: Number(ph.toFixed(3)),
+        projectedDriver: null,
+        observedHealth: combinedTimelineHealth(year),
+        projectedHealth: null,
+      };
+    }),
+    ...projectedYears.map((year) => {
+      const ph = pHForYear(year);
+      return {
+        year,
+        observedDriver: null,
+        projectedDriver: Number(ph.toFixed(3)),
+        observedHealth: null,
+        projectedHealth: combinedTimelineHealth(year),
+      };
+    }),
+  ];
+}
+
+export function buildReefContextComparison(current: OceanParams) {
+  return [
+    {
+      metric: "Arctic CWC health index",
+      value: Number(calculateHealthScore(current).toFixed(1)),
+      fill: "#286b73",
+    },
+    {
+      metric: "Global tropical live coral cover (2019)",
+      value: 29.5,
+      fill: "#b36f43",
     },
   ];
 }
