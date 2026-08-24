@@ -1,14 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import Header from "@/components/Header";
 import ControlPanel from "@/components/ControlPanel";
-import MetricsGrid from "@/components/MetricsGrid";
 import ChartsSection from "@/components/ChartsSection";
 import {
   DEFAULT_PARAMS,
   MOCK_GREENLAND_DATA,
-  calculateMetrics,
   parseOceanCsv,
   type ChartParam,
   type OceanDataPoint,
@@ -20,8 +18,6 @@ export default function Home() {
   const [chartParam, setChartParam] = useState<ChartParam>("temp");
   const [stations, setStations] = useState<OceanDataPoint[]>(MOCK_GREENLAND_DATA);
   const [dataSource, setDataSource] = useState<"mock" | "csv">("mock");
-
-  const metrics = useMemo(() => calculateMetrics(params), [params]);
 
   const handleCsvUpload = async (file: File) => {
     const text = await file.text();
@@ -51,7 +47,6 @@ export default function Home() {
         />
 
         <div className="min-w-0 space-y-8">
-          <MetricsGrid metrics={metrics} />
           <ChartsSection
             data={stations}
             chartParam={chartParam}
