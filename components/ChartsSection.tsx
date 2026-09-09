@@ -110,11 +110,11 @@ export default function ChartsSection({
           </p>
         </div>
 
-        <div className="grid gap-px bg-[#cfd5d1] xl:grid-cols-3">
+        <div className="grid gap-px bg-[#cfd5d1] xl:grid-cols-2 min-[1900px]:grid-cols-3">
           <TimeSeriesCard
             number="01"
             title="Surface temperature → deep-reef temperature"
-            description="NOAA surface observations are translated to an estimated 886–932 m reef-water temperature using a damped depth-transfer proxy."
+            description="NOAA surface observations are adjusted to estimate 886–932 m reef water, where temperature changes far less than it does at the surface. This is a depth-buffered estimate, not a direct deep-water measurement."
             data={temperatureTimeline}
             driverName="Surface water temperature"
             driverUnit="°C"
@@ -132,7 +132,7 @@ export default function ChartsSection({
           <TimeSeriesCard
             number="02"
             title="Microplastic contamination"
-            description="Sparse reported water-column observations from Greenland waters are shown with an illustrative 6% annual continuation scenario."
+            description="Published Greenland-water microplastic measurements are shown where observations exist. After the last measurement, the dashed line assumes a 6% yearly increase to illustrate a possible future exposure path; it is not a forecast."
             data={microplasticTimeline}
             driverName="Microplastics"
             driverUnit="particles/m³"
@@ -375,9 +375,10 @@ function TimeSeriesCard({
         <h3 className="mt-1 text-base font-medium leading-5 text-[#202b2c]">{title}</h3>
         <p className="mt-2 text-xs leading-5 text-[#6b7574]">{description}</p>
       </figcaption>
-      <div className="h-80 w-full px-3 py-5 sm:px-5">
-        <ResponsiveContainer width="100%" height="100%">
-          <ComposedChart data={data} margin={{ top: 16, right: 8, bottom: 8, left: 0 }}>
+      <div className="px-3 py-5 sm:px-5">
+        <div className="h-72 w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <ComposedChart data={data} margin={{ top: 24, right: 20, bottom: 10, left: 20 }}>
             <CartesianGrid stroke="#d9ddda" strokeDasharray="2 4" />
             <XAxis
               dataKey="year"
@@ -386,11 +387,11 @@ function TimeSeriesCard({
               tick={{ fill: "#53605e", fontSize: 12 }}
               stroke="#9aa5a1"
               tickFormatter={(year) => String(year)}
-              height={35}
+              height={54}
               label={{
                 value: "Year",
                 position: "insideBottom",
-                offset: -4,
+                offset: -2,
                 fill: "#4d5959",
                 fontSize: 12,
               }}
@@ -400,14 +401,8 @@ function TimeSeriesCard({
               domain={driverDomain}
               stroke="#286b73"
               tick={{ fill: "#1f626a", fontSize: 12 }}
-              width={58}
-              label={{
-                value: driverAxisLabel,
-                angle: -90,
-                position: "insideLeft",
-                fill: "#1f626a",
-                fontSize: 12,
-              }}
+              width={82}
+              label={<VerticalAxisLabel value={driverAxisLabel} side="left" color="#1f626a" />}
             />
             <YAxis
               yAxisId="health"
@@ -416,14 +411,8 @@ function TimeSeriesCard({
               stroke="#b36f43"
               tick={{ fill: "#9b5c36", fontSize: 12 }}
               tickFormatter={(value) => `${value}%`}
-              width={45}
-              label={{
-                value: "Coral health (%)",
-                angle: 90,
-                position: "insideRight",
-                fill: "#9b5c36",
-                fontSize: 12,
-              }}
+              width={82}
+              label={<VerticalAxisLabel value="Coral health (%)" side="right" color="#9b5c36" />}
             />
             <ReferenceLine
               x={projectionStart}
@@ -445,7 +434,6 @@ function TimeSeriesCard({
                 return [`${number.toFixed(driverUnit === "pH" ? 3 : 1)} ${driverUnit}`, String(name)];
               }}
             />
-            <Legend wrapperStyle={{ fontSize: 11, color: "#53605e" }} />
             <Line
               yAxisId="driver"
               dataKey="observedDriver"
@@ -488,14 +476,101 @@ function TimeSeriesCard({
               connectNulls={false}
               isAnimationActive={false}
             />
-          </ComposedChart>
-        </ResponsiveContainer>
+            </ComposedChart>
+          </ResponsiveContainer>
+        </div>
+        <TimelineLegend driverName={driverName} />
       </div>
       <div className="border-t border-[#cfd5d1] px-5 py-4 text-[11px] leading-5 text-[#6b7574]">
         <p>{source}</p>
         <p className="mt-2 text-[#7a8381]">{note}</p>
       </div>
     </figure>
+  );
+}
+
+function VerticalAxisLabel({
+  viewBox,
+  value,
+  side,
+  color,
+}: {
+  viewBox?: { x: number; y: number; width: number; height: number };
+  value: string;
+  side: "left" | "right";
+  color: string;
+}) {
+  if (!viewBox) return null;
+
+  const x = side === "left" ? viewBox.x - 44 : viewBox.x + viewBox.width + 44;
+  const y = viewBox.y + viewBox.height / 2;
+
+  return (
+    <text
+      fill={color}
+      fontSize="12"
+      textAnchor="middle"
+      transform={`rotate(${side === "left" ? -90 : 90} ${x} ${y})`}
+      x={x}
+      y={y}
+    >
+      {value}
+    </text>
+  );
+}
+
+function TimelineLegend({ driverName }: { driverName: string }) {
+  return (
+    <div
+      className="mt-5 grid gap-x-4 gap-y-2 border-t border-[#e0e4e1] pt-4 text-[11px] leading-4 text-[#53605e] sm:grid-cols-2"
+      aria-label="Chart legend"
+    >
+      <LegendItem color="#b36f43" label="Estimated health — observed" />
+      <LegendItem color="#b36f43" dashed label="Estimated health — projected" />
+      <LegendItem color="#286b73" dot label={`${driverName} — observed`} />
+      <LegendItem color="#286b73" dashed dot hollowDot label={`${driverName} — projected`} />
+    </div>
+  );
+}
+
+function LegendItem({
+  color,
+  label,
+  dashed = false,
+  dot = false,
+  hollowDot = false,
+}: {
+  color: string;
+  label: string;
+  dashed?: boolean;
+  dot?: boolean;
+  hollowDot?: boolean;
+}) {
+  return (
+    <div className="flex min-w-0 items-center gap-2">
+      <svg aria-hidden="true" className="shrink-0" height="14" viewBox="0 0 28 14" width="28">
+        <line
+          stroke={color}
+          strokeDasharray={dashed ? "5 4" : undefined}
+          strokeWidth="2"
+          x1="1"
+          x2="27"
+          y1="7"
+          y2="7"
+        />
+        {dot && (
+          <circle
+            cx="14"
+            cy="7"
+            fill={hollowDot ? "#f7f8f5" : color}
+            r="3"
+            stroke={color}
+            strokeWidth="2"
+          />
+        )}
+      </svg>
+      <span>{label}</span>
+    </div>
   );
 }
 
