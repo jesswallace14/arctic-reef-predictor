@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 export default function Header() {
   return (
@@ -39,9 +40,34 @@ export default function Header() {
 
         <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
           <div>
-            <h1 className="max-w-3xl text-3xl font-medium leading-[1.08] tracking-[-0.035em] text-[#182122] sm:text-4xl">
-              Greenland Arctic Coral Health Estimator
-            </h1>
+            <div className="flex flex-wrap items-center gap-4 sm:gap-6">
+              <h1 className="max-w-3xl text-3xl font-medium leading-[1.08] tracking-[-0.035em] text-[#182122] sm:text-4xl">
+                Greenland Arctic Coral Health Estimator
+              </h1>
+              <div
+                className="flex h-16 w-36 shrink-0 items-center justify-center gap-3 border border-[#bfc7c2] bg-white/60 px-3"
+                aria-label="Adventure Canada and The Explorers Club"
+              >
+                <div className="relative h-11 w-11 overflow-hidden" title="Adventure Canada">
+                  <Image
+                    src="/logos/adventure-canada-logo.png"
+                    alt="Adventure Canada"
+                    fill
+                    sizes="44px"
+                    className="object-cover object-left"
+                  />
+                </div>
+                <div className="relative h-11 w-11" title="The Explorers Club">
+                  <Image
+                    src="/logos/explorers-club-flag.png"
+                    alt="The Explorers Club"
+                    fill
+                    sizes="44px"
+                    className="object-contain"
+                  />
+                </div>
+              </div>
+            </div>
             <p className="mt-5 max-w-4xl border-l-2 border-[#286b73] pl-4 text-sm leading-6 text-[#3f5556]">
               <strong className="font-medium">
                 This work is an estimator for how these deep-sea reefs are performing
