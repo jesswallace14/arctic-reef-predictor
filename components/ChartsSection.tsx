@@ -376,9 +376,23 @@ function TimeSeriesCard({
         <p className="mt-2 text-xs leading-5 text-[#6b7574]">{description}</p>
       </figcaption>
       <div className="px-3 py-5 sm:px-5">
-        <div className="h-72 w-full">
+        <div className="mb-2 flex items-end justify-between gap-4 px-6 text-[11px] font-medium">
+          <p className="text-[#1f626a]">Environmental attribute: {driverAxisLabel}</p>
+          <p className="shrink-0 text-[#9b5c36]">Estimated reef health (%)</p>
+        </div>
+        <div className="relative h-72 w-full">
+          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 flex w-6 items-center justify-center">
+            <span className="-rotate-90 whitespace-nowrap text-[12px] font-medium text-[#1f626a]">
+              {driverAxisLabel}
+            </span>
+          </div>
+          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 flex w-6 items-center justify-center">
+            <span className="rotate-90 whitespace-nowrap text-[12px] font-medium text-[#9b5c36]">
+              Estimated reef health (%)
+            </span>
+          </div>
           <ResponsiveContainer width="100%" height="100%">
-            <ComposedChart data={data} margin={{ top: 24, right: 20, bottom: 10, left: 20 }}>
+            <ComposedChart data={data} margin={{ top: 24, right: 26, bottom: 10, left: 26 }}>
             <CartesianGrid stroke="#d9ddda" strokeDasharray="2 4" />
             <XAxis
               dataKey="year"
@@ -402,7 +416,6 @@ function TimeSeriesCard({
               stroke="#286b73"
               tick={{ fill: "#1f626a", fontSize: 12 }}
               width={82}
-              label={<VerticalAxisLabel value={driverAxisLabel} side="left" color="#1f626a" />}
             />
             <YAxis
               yAxisId="health"
@@ -412,7 +425,6 @@ function TimeSeriesCard({
               tick={{ fill: "#9b5c36", fontSize: 12 }}
               tickFormatter={(value) => `${value}%`}
               width={82}
-              label={<VerticalAxisLabel value="Coral health (%)" side="right" color="#9b5c36" />}
             />
             <ReferenceLine
               x={projectionStart}
@@ -486,36 +498,6 @@ function TimeSeriesCard({
         <p className="mt-2 text-[#7a8381]">{note}</p>
       </div>
     </figure>
-  );
-}
-
-function VerticalAxisLabel({
-  viewBox,
-  value,
-  side,
-  color,
-}: {
-  viewBox?: { x: number; y: number; width: number; height: number };
-  value: string;
-  side: "left" | "right";
-  color: string;
-}) {
-  if (!viewBox) return null;
-
-  const x = side === "left" ? viewBox.x - 44 : viewBox.x + viewBox.width + 44;
-  const y = viewBox.y + viewBox.height / 2;
-
-  return (
-    <text
-      fill={color}
-      fontSize="12"
-      textAnchor="middle"
-      transform={`rotate(${side === "left" ? -90 : 90} ${x} ${y})`}
-      x={x}
-      y={y}
-    >
-      {value}
-    </text>
   );
 }
 
