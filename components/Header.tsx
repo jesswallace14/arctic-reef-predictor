@@ -44,25 +44,22 @@ export default function Header() {
               <h1 className="max-w-3xl text-3xl font-medium leading-[1.08] tracking-[-0.035em] text-[#182122] sm:text-4xl">
                 Greenland Arctic Coral Health Estimator
               </h1>
-              <div
-                className="flex h-16 w-36 shrink-0 items-center justify-center gap-3 border border-[#bfc7c2] bg-white/60 px-3"
-                aria-label="Adventure Canada and The Explorers Club"
-              >
-                <div className="relative h-11 w-11 overflow-hidden" title="Adventure Canada">
+              <div className="flex h-16 shrink-0 items-center gap-3" aria-label="Adventure Canada and The Explorers Club">
+                <div className="relative h-14 w-14" title="Adventure Canada">
                   <Image
                     src="/logos/adventure-canada-logo.png"
                     alt="Adventure Canada"
                     fill
-                    sizes="44px"
-                    className="object-cover object-left"
+                    sizes="56px"
+                    className="object-contain"
                   />
                 </div>
-                <div className="relative h-11 w-11" title="The Explorers Club">
+                <div className="relative h-14 w-16" title="The Explorers Club">
                   <Image
-                    src="/logos/explorers-club-flag.png"
+                    src="/logos/explorers-club-logo.png"
                     alt="The Explorers Club"
                     fill
-                    sizes="44px"
+                    sizes="64px"
                     className="object-contain"
                   />
                 </div>

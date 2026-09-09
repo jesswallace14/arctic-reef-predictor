@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import Image from "next/image";
 import {
   ResponsiveContainer,
   Scatter,
@@ -163,6 +164,7 @@ export default function ChartsSection({
             }
             note="The health line includes all three stressor trajectories. 2020 onward extends the observed −0.00219 pH/year trend; it is a scenario, not a climate-model forecast."
           />
+          <ArcticContextPanel />
         </div>
       </section>
 
@@ -300,6 +302,43 @@ export default function ChartsSection({
         </figure>
       </section>
     </div>
+  );
+}
+
+function ArcticContextPanel() {
+  return (
+    <aside className="bg-[#f7f8f5] p-5" aria-label="Greenland reef and fjord imagery">
+      <div className="flex h-full min-h-[34rem] flex-col gap-6">
+        <figure className="flex min-h-0 flex-1 flex-col">
+          <div className="relative min-h-0 flex-1 overflow-hidden rounded-xl bg-[#dce3df]">
+            <Image
+              src="/about/greenland-soft-coral-garden.jpg"
+              alt="Cold-water corals on the Greenland seafloor"
+              fill
+              sizes="(min-width: 1900px) 31vw, (min-width: 1280px) 46vw, 100vw"
+              className="object-cover"
+            />
+          </div>
+          <figcaption className="pt-3 text-xs leading-5 text-[#5d6968]">
+            <span className="font-medium text-[#263031]">Arctic reef life.</span> A Greenland cold-water coral garden.
+          </figcaption>
+        </figure>
+        <figure className="flex min-h-0 flex-1 flex-col">
+          <div className="relative min-h-0 flex-1 overflow-hidden rounded-xl bg-[#dce3df]">
+            <Image
+              src="/about/carousel-2.jpg"
+              alt="Zodiac approaching a southern Greenland fjord"
+              fill
+              sizes="(min-width: 1900px) 31vw, (min-width: 1280px) 46vw, 100vw"
+              className="object-cover"
+            />
+          </div>
+          <figcaption className="pt-3 text-xs leading-5 text-[#5d6968]">
+            <span className="font-medium text-[#263031]">Southern Greenland fjord.</span> A Zodiac approach along the expedition route.
+          </figcaption>
+        </figure>
+      </div>
+    </aside>
   );
 }
 
