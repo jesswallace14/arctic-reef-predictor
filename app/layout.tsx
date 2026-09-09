@@ -14,11 +14,34 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://gache.app"),
   title: "Greenland Arctic Coral Health Estimator",
   description:
     "Research interface estimating Arctic cold-water coral health from surface ocean temperature, pH, and microplastic density.",
   icons: {
-    icon: "/trojan-horse-mark.png",
+    icon: "/about/greenland-soft-coral-garden.jpg",
+  },
+  openGraph: {
+    title: "Greenland Arctic Coral Health Estimator",
+    description:
+      "Research interface estimating Arctic cold-water coral health from surface ocean temperature, pH, and microplastic density.",
+    url: "/",
+    siteName: "GACHE",
+    images: [
+      {
+        url: "/about/greenland-soft-coral-garden.jpg",
+        width: 1800,
+        height: 650,
+        alt: "Cold-water corals on the Greenland seafloor",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Greenland Arctic Coral Health Estimator",
+    description:
+      "Research interface estimating Arctic cold-water coral health from surface ocean temperature, pH, and microplastic density.",
+    images: ["/about/greenland-soft-coral-garden.jpg"],
   },
 };
 
